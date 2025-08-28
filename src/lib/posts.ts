@@ -22,3 +22,7 @@ export async function getPosts(): Promise<Post[]> {
     },
   ]
 }
+export async function getPostBySlug(slug: string): Promise<Post | null> {
+  const posts = await getPosts();
+  return posts.find(post => post.slug === slug) || null;
+}
