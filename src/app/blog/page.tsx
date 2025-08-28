@@ -22,5 +22,5 @@ export default async function BlogPage() {
         ))}
       </ul>
     </div>
-  );
+  )
 }
