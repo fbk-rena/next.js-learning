@@ -13,7 +13,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const query = searchParams?.query?.toLowerCase() || '';
   const allPosts = await getPosts();
   
-  // Filtrar posts solo por título
   const filteredPosts = query 
     ? allPosts.filter(post => post.title.toLowerCase().includes(query))
     : allPosts;
