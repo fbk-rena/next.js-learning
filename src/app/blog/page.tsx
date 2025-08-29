@@ -1,26 +1,55 @@
 // src/app/blog/page.tsx
 import { getPosts } from '@/lib/posts';
 import Link from 'next/link';
+import SearchBar from '@/components/search-bar';
 
-export default async function BlogPage() {
-  const posts = await getPosts();
+interface BlogPageProps {
+  searchParams?: {
+    query?: string;
+  };
+}
+
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const query = searchParams?.query?.toLowerCase() || '';
+  const allPosts = await getPosts();
+  
+  const filteredPosts = query 
+    ? allPosts.filter(post => post.title.toLowerCase().includes(query))
+    : allPosts;
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Blog</h1>
-      <ul className="space-y-4">
-        {posts.map((post) => (
-          <li key={post.slug}>
-            <Link 
-              href={`/blog/${post.slug}`}
-              className="text-blue-600 hover:text-blue-800 hover:underline"
-            >
-              {post.title}
-            </Link>
-            <p className="text-sm text-gray-600">{post.date}</p>
-          </li>
-        ))}
-      </ul>
+      <h1>Blog</h1>
+      
+      <SearchBar />
+      
+      {query && (
+        <p>
+          {filteredPosts.length} blog(s) found for "{query}"
+        </p>
+      )}
+      
+      {filteredPosts.length > 0 ? (
+        <ul>
+          {filteredPosts.map((post) => (
+            <li key={post.slug}>
+              <Link href={`/blog/${post.slug}`}>
+                {post.title}
+              </Link>
+              <p>{post.date}</p>
+              <p>
+                {post.content.substring(0, 150)}...
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div>
+          <p>
+            {query ? 'No post found' : 'No posts with that title'}
+          </p>
+        </div>
+      )}
     </div>
-  )
+  );
 }
