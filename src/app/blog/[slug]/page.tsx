@@ -1,6 +1,7 @@
 // src/app/blog/[slug]/page.tsx
 import { getPosts, getPostBySlug } from '@/lib/posts';
 import { notFound } from 'next/navigation';
+import LikeButton from '@/components/like-button';
 
 export async function generateStaticParams() {
   const posts = await getPosts();
@@ -29,6 +30,7 @@ export default async function PostPage({
       <div className="prose">
         {post.content}
       </div>
+      <LikeButton slug={slug} />
     </article>
   );
 }
